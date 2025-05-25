@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { Account } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
@@ -49,25 +49,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({
-      token,
-      user,
-      account,
-    }: {
-      token: Token;
-      user?: User;
-      account?: any;
-    }) {
-      if (account?.provider === "google" && user?.email) {
+    async jwt({ token, user, account }) {
+      if (account?.provider === "google" && account.id_token) {
         const res = await fetch("http://localhost:3000/api/auth/google-login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            image: user.image,
-          }),
+          body: JSON.stringify({ id_token: account.id_token }),
         });
         const data = await res.json();
         if (res.ok && data.success) {
@@ -79,7 +66,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
-      // For credentials login or fallback
       if (user && !token.id) {
         token.id = user.id;
         token.email = user.email;

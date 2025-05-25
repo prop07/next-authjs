@@ -1,19 +1,18 @@
-// app/api/auth/google-login/route.ts
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { email, name, image, id } = await request.json();
-
-  // Simulated user DB check/upsert
-
-  if (email) {
+  const { id_token } = await request.json();
+  const res = await fetch(
+    `https://oauth2.googleapis.com/tokeninfo?id_token="${id_token}"`
+  );
+  const data = await res.json();
+  if (data.email) {
     const user = {
-      id: id,
-      name: name,
-      email: email,
-      image: image,
-      //   expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-      expiresAt: "hola google login",
+      id: data.sub,
+      name: data.name,
+      email: data.email,
+      image: data.picture,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
     };
 
     return NextResponse.json({ success: true, user });
