@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   const { id_token } = await request.json();
   const res = await fetch(
-    `https://oauth2.googleapis.com/tokeninfo?id_token="${id_token}"`
+    `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`
   );
   const data = await res.json();
   if (data.email) {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       name: data.name,
       email: data.email,
       image: data.picture,
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+      expiresAt: "google",
     };
 
     return NextResponse.json({ success: true, user });

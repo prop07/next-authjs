@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       name: mockUser.name,
       email: mockUser.email,
       image: mockUser.image,
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+      expiresAt: "credentials",
     };
 
     return NextResponse.json({ success: true, user });
