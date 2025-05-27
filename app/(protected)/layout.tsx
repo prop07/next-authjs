@@ -1,5 +1,7 @@
 import { auth } from '@/auth'
+import SessionChecker from '@/components/SessionCheacker';
 import { redirect } from 'next/navigation'
+
 
 const layout = async ({
     children
@@ -10,11 +12,10 @@ const layout = async ({
     if (!session) {
         redirect("/login")
     }
-    if (session.expires < new Date().toISOString()) {
-        redirect("/login")
-    }
     return (
-        <div><div>protected</div>{children}</div>
+        <div>
+            <SessionChecker session={session} />
+            <div>protected</div>{children}</div>
     )
 }
 
