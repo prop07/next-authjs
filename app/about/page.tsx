@@ -1,6 +1,5 @@
 const page = () => {
 
-
     return (
         <div>
             about

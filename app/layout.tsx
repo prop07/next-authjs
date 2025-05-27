@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   const heads = await headers();
   const path = heads.get("path");
+  console.log("Path from headers:", path);
   const page = path?.split("/").filter(Boolean)[0] || "home";
   return getMetadata(page);
 }

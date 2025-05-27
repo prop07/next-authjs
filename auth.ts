@@ -44,7 +44,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             password: credentials?.password,
           }),
         });
-
         const data = await res.json();
         if (res.ok && data.success) {
           return data.user;
@@ -69,10 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               body: JSON.stringify({ id_token: account.id_token }),
             }
           );
-
           const data = await res.json();
-          console.log("Google login response:", data);
-
           if (res.ok && data.success) {
             // Store all user data in token
             token.id = data.user.id;
@@ -87,7 +83,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw error;
         }
       }
-
       // Handle credentials login (first time login)
       if (user && account?.provider === "credentials") {
         token.id = user.id;
@@ -96,7 +91,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.image = user.image;
         token.loginExpiredAt = user.expiresAt;
       }
-
       return token;
     },
 
@@ -109,7 +103,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Set custom loginExpires field
         session.expires = token.loginExpiredAt as Date & string;
       }
-
       return session;
     },
   },
