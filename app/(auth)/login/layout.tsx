@@ -1,14 +1,15 @@
-import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
-import { ReactNode } from 'react';
-
+import { auth } from "@/auth";
+import SessionChecker from "@/components/SessionCheacker";
+import { ReactNode } from "react";
 
 const layout = async ({ children }: { children: ReactNode }) => {
-    const session = await auth()
-    if (session && session?.user) {
-        redirect('/')
-    }
-    return children
-}
+    const session = await auth();
+    return (
+        <div>
+            {" "}
+            <SessionChecker session={session} /> {children}
+        </div>
+    );
+};
 
-export default layout
+export default layout;
