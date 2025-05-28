@@ -7,7 +7,7 @@ import { AuthError } from "next-auth";
 const page = async ({
     searchParams,
 }: {
-    searchParams: { [key: string]: string };
+    searchParams: Promise<Record<string, string | undefined>>
 }) => {
     const params = await searchParams;
     const token = params?.token || null;
@@ -28,7 +28,7 @@ const page = async ({
         } catch (error) {
             let encoded;
             if (error instanceof AuthError) {
-                if (error.type === "CredentialsSignin") {
+                if (error.message?.includes("CredentialsSignin")) {
                     const result = {
                         status: "error",
                         message: "Invalid credentials.",

@@ -3,7 +3,14 @@ import Image from "next/image";
 import React, { useState } from "react";
 import LogOut from "./button/Log-out";
 
-const ProfileMenu = ({ session }) => {
+interface Session {
+    user?: {
+        image?: string;
+        name?: string;
+    };
+}
+
+const ProfileMenu = ({ session }: { session: Session }) => {
     const [open, setOpen] = useState(false);
 
     return (

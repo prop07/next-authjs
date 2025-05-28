@@ -27,6 +27,8 @@ export function getMetadata(page: string): Metadata {
     ...data,
     openGraph: {
       ...data,
+      description: data.description || undefined,
+      title: data.title || "Default Title",
       url: `${baseUrl}/${page === "home" ? "" : page}`,
       images: [
         {
