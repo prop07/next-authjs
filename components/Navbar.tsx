@@ -12,8 +12,8 @@ const Navbar = async () => {
                 <Link href="/" className=' text-2xl font-bold'>Logo</Link>
             </div>
             <div className='flex items-center gap-2' >
-                <Link href={"/create"}><span className='font-bold hover:text-blue-500 hover:underline'>
-                    create+
+                <Link href={"/dashboard"}><span className='font-bold hover:text-blue-500 hover:underline'>
+                    DashBoard
                 </span>
                 </Link>
                 {session && session?.user ? (
