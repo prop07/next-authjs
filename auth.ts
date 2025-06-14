@@ -5,11 +5,12 @@ import Google from "next-auth/providers/google";
 declare module "next-auth" {
   interface Session {
     user: User;
-    loginExpires?: string;
+    id_token: string;
   }
 
   interface User {
-    id: string;
+    token: string;
+    id_token: string;
     name: string;
     email: string;
     image: string;
@@ -23,6 +24,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.NEXT_SECRET,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -71,11 +73,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const data = await res.json();
           if (res.ok && data.success) {
             // Store all user data in token
-            token.id = data.user.id;
+            token.id = data.token;
             token.email = data.user.email;
             token.name = data.user.name;
             token.image = data.user.image;
-            token.loginExpiredAt = data.user.expiresAt;
           } else {
             throw new Error(data.message || "Google login failed");
           }
@@ -85,23 +86,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       // Handle credentials login (first time login)
       if (user && account?.provider === "credentials") {
-        token.id = user.id;
+        token.id = user.token;
         token.email = user.email;
         token.name = user.name;
         token.image = user.image;
-        token.loginExpiredAt = user.expiresAt;
       }
       return token;
     },
 
     async session({ session, token }) {
       if (session.user && token) {
-        session.user.id = token.id as string;
+        session.id_token = token.id as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
         session.user.image = token.image as string;
-        // Set custom loginExpires field
-        session.expires = token.loginExpiredAt as Date & string;
       }
       return session;
     },

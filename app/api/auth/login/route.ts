@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+const SECRET_KEY = process.env.AUTH_SECRET;
 
 export async function POST(request: Request) {
   const { email, password } = await request.json();
@@ -13,16 +15,20 @@ export async function POST(request: Request) {
   };
 
   if (email === mockUser.email && password === mockUser.password) {
-    const user = {
-      id: "1",
+    const payload = {
       name: mockUser.name,
       email: mockUser.email,
       image: mockUser.image,
-      expiresAt: new Date(Date.now() + 60 * 1 * 1000).toISOString(),
     };
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1m" });
 
-    return NextResponse.json({ success: true, user });
+    return NextResponse.json({ success: true, user: { ...payload, token } });
   }
+  if (!email || !password)
+    return NextResponse.json(
+      { success: false, message: "Missing fields" },
+      { status: 400 }
+    );
 
   return NextResponse.json(
     { success: false, message: "Invalid email or password" },

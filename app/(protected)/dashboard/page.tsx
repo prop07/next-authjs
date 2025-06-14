@@ -3,7 +3,8 @@ import React from "react";
 
 const page = async () => {
     const session = await auth();
-    return <div>{JSON.stringify(session, null, 2)}</div>;
+    // console.log("id_token", session.id_token)
+    return <div>{JSON.stringify(session.user, null, 2)}</div>;
 };
 
 export default page;
