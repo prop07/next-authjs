@@ -3,18 +3,23 @@ import GoogleSignIn from "@/components/ui/button/GoogleSignIn";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import SignOutOnError from "@/components/SignOutOnError";
+import { auth } from "@/auth";
+
 
 const page = async ({
     searchParams,
 }: {
     searchParams: Promise<Record<string, string | undefined>>
 }) => {
+    const session = await auth();
     const params = await searchParams;
     const token = params?.token || null;
     let paramsObj;
     if (token) {
         paramsObj = JSON.parse(atob(token));
     }
+
 
     async function handleLogin(formData: FormData) {
         "use server";
@@ -53,7 +58,10 @@ const page = async ({
             <div className="flex flex-col items-center gap-2">
                 <div className=" fixed top-0 left-0 right-0  p-4 text-center">
                     {paramsObj && paramsObj.status === "error" && (
-                        <div className="text-red-500">{paramsObj.message}</div>
+                        <div>
+                            <SignOutOnError session={session} />
+                            <div className="text-red-500">{paramsObj.message}</div>
+                        </div>
                     )}
                 </div>
                 <form action={handleLogin} className="flex flex-col gap-2">

@@ -14,7 +14,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
 export async function generateMetadata(): Promise<Metadata> {
   const heads = await headers();
   const path = heads.get("path");
@@ -27,18 +26,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const heads = await headers();
-  const token = JSON.parse(heads.get("token") || "{}");
-  const exp = heads.get("tokenexpire");
-  const expireDate = exp ? new Date(JSON.parse(exp) * 1000) : null;
-  console.log("expireDate", expireDate);
-  console.log("current date", new Date())
-
-  if (expireDate && new Date() > expireDate) {
-    console.log("Token expired, redirecting to login");
-  }
-
-
   return (
     <html lang="en">
       <body
