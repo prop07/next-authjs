@@ -20,6 +20,9 @@ export async function POST(request: Request) {
       email: mockUser.email,
       image: mockUser.image,
     };
+    if (!SECRET_KEY) {
+      throw new Error("AUTH_SECRET environment variable is not set");
+    }
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1m" });
 
     return NextResponse.json({ success: true, user: { ...payload, token } });

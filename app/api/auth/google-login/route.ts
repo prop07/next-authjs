@@ -15,6 +15,9 @@ export async function POST(request: Request) {
       image: data.picture,
     };
 
+    if (!SECRET_KEY) {
+      throw new Error("AUTH_SECRET is not defined in environment variables");
+    }
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1m" });
     return NextResponse.json({ success: true, token, user: { ...payload } });
   }
